@@ -1,35 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+import {Component} from 'react';
+import {Container} from 'react-bootstrap';
+import './App.css';
+class Slider extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            autoplay: false,
+            slide: 0
+        }
+    }
+    
+    changeSlide = (i) => {
+        this.setState(({slide}) => ({
+            slide: slide + i
+        }))
+    }
+    
+    toggleAutoplay = () => {
+        this.setState(({autoplay}) => ({
+            autoplay: !autoplay
+        }))
+    }
+    
+    render() {
+        return (
+            <Container>
+                <div className="slider w-50 m-auto">
+                    <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
+                    <div className="text-center mt-5">Active slide {this.state.slide} <br/> {this.state.autoplay ? 'auto' : null}</div>
+                    <div className="buttons mt-3 d-flex justify-content-center">
+                        <button
+                            className="btn btn-primary me-2"
+                            onClick={() => this.changeSlide(-1)}>-1</button>
+                        <button
+                            className="btn btn-primary me-2"
+                            onClick={() => this.changeSlide(1)}>+1</button>
+                        <button
+                            className="btn btn-primary me-2"
+                            onClick={this.toggleAutoplay}>toggle autoplay</button>
+                    </div>
+                </div>
+            </Container>
+        )
+    }
 }
 
-export default App
+
+// const Slider = (props) => {
+//     return (
+//         <Container>
+//             <div className="slider w-50 m-auto">
+//                 <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
+//                 <div className="text-center mt-5">Active slide {this.state.slide} <br/> {this.state.autoplay ? 'auto' : null}</div>
+//                 <div className="buttons mt-3">
+//                     <button
+//                         className="btn btn-primary me-2"
+//                         onClick={() => this.changeSlide(-1)}>-1</button>
+//                     <button
+//                         className="btn btn-primary me-2"
+//                         onClick={() => this.changeSlide(1)}>+1</button>
+//                     <button
+//                         className="btn btn-primary me-2"
+//                         onClick={this.toggleAutoplay}>toggle autoplay</button>
+//                 </div>
+//             </div>
+//         </Container>
+//     )
+// }
+
+
+function App() {
+    return (
+        <Slider/>
+    );
+}
+
+export default App;
