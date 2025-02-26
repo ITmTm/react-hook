@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import './App.css';
 
@@ -54,10 +54,16 @@ const Slider = (props) => {
     const [autoplay, setAutoplay] = useState(false);
 
 	useEffect(() => {
-		console.log('effect');
 		document.title = `Slide: ${slide}`;
 	},[slide]);
 
+	const getSomeImages = useCallback(() => {
+		console.log('fetching');
+		return [
+			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPIfiGgUML8G3ZqsNLHfaCnZK3I5g4tJabQ&s',
+			'https://rukminim2.flixcart.com/image/850/1000/kgsb1jk0-0/poster/n/h/y/medium-twfnp2-beautiful-waterfall-nature-view-large-size-high-original-imafwy37qv2b5g3v.jpeg?q=20&crop=false'
+		]
+	}, []);
 
     
     function changeSlide(i) {
@@ -72,8 +78,19 @@ const Slider = (props) => {
         <Container>
             <div className="slider w-50 m-auto">
                 <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
-                <div className="text-center mt-5">Active slide {slide} <br/> {autoplay ? 'auto' : null}</div>
-                <div className="buttons mt-3 d-flex justify-content-center">
+
+			{/*	{
+					getSomeImages().map((url, i) => {
+						return (
+							<img key={i} className="d-block w-100" src={url} alt="slide"/>
+						)
+					})
+				}*/}
+
+				<Slide getSomeImages={getSomeImages} />
+
+				<div className="text-center mt-5">Active slide { slide } <br/> { autoplay ? 'auto' : null }</div>
+				<div className="buttons mt-3 d-flex justify-content-center">
                     <button
                         className="btn btn-primary me-2"
                         onClick={() => changeSlide(-1)}>-1</button>
@@ -89,10 +106,24 @@ const Slider = (props) => {
     )
 }
 
+const Slide = ({ getSomeImages }) => {
+	const [images, setImages] = useState([]);
+
+	useEffect(() => {
+		setImages(getSomeImages())
+	}, [getSomeImages]);
+
+	return (
+		<>
+			{images.map((url, i) => <img key={ i } className="d-block w-100" src={ url } alt="slide"/>) }
+		</>
+	)
+}
+
 
 function App() {
-    return (
-        <Slider/>
+	return (
+		<Slider/>
     );
 }
 
