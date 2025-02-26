@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import {Container} from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Container } from 'react-bootstrap';
 import './App.css';
 
 // class Slider extends Component {
@@ -52,10 +52,16 @@ const Slider = (props) => {
     
     const [slide, setSlide] = useState(0);
     const [autoplay, setAutoplay] = useState(false);
+
+	useEffect(() => {
+		console.log('effect');
+		document.title = `Slide: ${slide}`;
+	},[slide]);
+
+
     
     function changeSlide(i) {
-        setSlide(prevSlide => prevSlide + i)
-        setSlide(prevSlide => prevSlide + i)
+        setSlide(prevSlide => prevSlide + i);
     }
     
     function toggleAutoplay() {
