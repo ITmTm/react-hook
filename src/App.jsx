@@ -1,131 +1,61 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { useState, useEffect, use } from 'react';
+import {Container} from 'react-bootstrap';
 import './App.css';
 
-// class Slider extends Component {
-//
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             autoplay: false,
-//             slide: 0
-//         }
-//     }
-//
-//     changeSlide = (i) => {
-//         this.setState(({slide}) => ({
-//             slide: slide + i
-//         }))
-//     }
-//
-//     toggleAutoplay = () => {
-//         this.setState(({autoplay}) => ({
-//             autoplay: !autoplay
-//         }))
-//     }
-//
-//     render() {
-//         return (
-//             <Container>
-//                 <div className="slider w-50 m-auto">
-//                     <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
-//                     <div className="text-center mt-5">Active slide {this.state.slide} <br/> {this.state.autoplay ? 'auto' : null}</div>
-//                     <div className="buttons mt-3 d-flex justify-content-center">
-//                         <button
-//                             className="btn btn-primary me-2"
-//                             onClick={() => this.changeSlide(-1)}>-1</button>
-//                         <button
-//                             className="btn btn-primary me-2"
-//                             onClick={() => this.changeSlide(1)}>+1</button>
-//                         <button
-//                             className="btn btn-primary me-2"
-//                             onClick={this.toggleAutoplay}>toggle autoplay</button>
-//                     </div>
-//                 </div>
-//             </Container>
-//         )
-//     }
-// }
+function useInputWithValidate(initialValue) {
+	const [value, setValue] = useState(initialValue);
 
-const countTotal = (num) => {
-	console.log('counting...');
-	return num + 10;
+	const onChange = event => {
+		setValue(event.target.value);
+	}
+
+	const validateInput = () => {
+		return value.search(/\d/) >= 0
+	}
+
+
+	return {value, onChange, validateInput};
 }
 
-const Slider = (props) => {
-    
-    const [slide, setSlide] = useState(0);
-    const [autoplay, setAutoplay] = useState(false);
+const Form = () => {
+	const input = useInputWithValidate('');
+	const textArea = useInputWithValidate('');
 
-	useEffect(() => {
-		document.title = `Slide: ${slide}`;
-	},[slide]);
 
-	const getSomeImages = useCallback(() => {
-		console.log('fetching');
-		return [
-			'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPIfiGgUML8G3ZqsNLHfaCnZK3I5g4tJabQ&s',
-			'https://rukminim2.flixcart.com/image/850/1000/kgsb1jk0-0/poster/n/h/y/medium-twfnp2-beautiful-waterfall-nature-view-large-size-high-original-imafwy37qv2b5g3v.jpeg?q=20&crop=false'
-		]
-	}, []);
-
-    
-    function changeSlide(i) {
-        setSlide(prevSlide => prevSlide + i);
-    }
-    
-    function toggleAutoplay() {
-        setAutoplay(autoplay => !autoplay)
-    }
-
-	const total = useMemo(() => {
-		return countTotal(slide)
-	}, []);
-    
-    return (
-        <Container>
-            <div className="slider w-50 m-auto">
-                <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
-
-				<Slide getSomeImages={getSomeImages} />
-
-				<div className="text-center mt-5">Active slide {slide} <br/> { autoplay ? 'auto' : null }</div>
-				<div className="text-center mt-5">Total slides {total}</div>
-				<div className="buttons mt-3 d-flex justify-content-center">
-                    <button
-                        className="btn btn-primary me-2"
-                        onClick={() => changeSlide(-1)}>-1</button>
-                    <button
-                        className="btn btn-primary me-2"
-                        onClick={() => changeSlide(1)}>+1</button>
-                    <button
-                        className="btn btn-primary me-2"
-                        onClick={toggleAutoplay}>toggle autoplay</button>
-                </div>
-            </div>
-        </Container>
-    )
-}
-
-const Slide = ({ getSomeImages }) => {
-	const [images, setImages] = useState([]);
-
-	useEffect(() => {
-		setImages(getSomeImages())
-	}, [getSomeImages]);
+	const color = input.validateInput() ? 'text-danger' : null;
 
 	return (
-		<>
-			{images.map((url, i) => <img key={ i } className="d-block w-100" src={ url } alt="slide"/>) }
-		</>
+		<Container>
+			<form className="w-50 border mt-5 p-3 m-auto">
+				<div className="mb-3">
+					<input value={`${input.value} / ${textArea.value}`} type="text" className="form-control" readOnly/>
+					<label htmlFor="exampleFormControlInput1" className="form-label mt-3">Email address</label>
+					<input
+						onChange={input.onChange}
+						type="email"
+						value={input.value}
+						className={`form-control ${color}`}
+						id="exampleFormControlInput1"
+						placeholder="name@example.com"/>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="exampleFormControlTextarea1" className="form-label">Example textarea</label>
+					<textarea
+						onChange={textArea.onChange}
+						value={textArea.value}
+						className="form-control"
+						id="exampleFormControlTextarea1"
+						rows="3"></textarea>
+				</div>
+			</form>
+		</Container>
 	)
 }
 
-
 function App() {
 	return (
-		<Slider/>
-    );
+		<Form/>
+	);
 }
 
 export default App;
